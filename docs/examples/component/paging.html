@@ -12,8 +12,8 @@
 	<title>Paging rows - FooTable</title>
 
 	<!-- Bootstrap core CSS -->
-	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" rel="stylesheet">
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" rel="stylesheet">
 
 	<!-- Prism -->
 	<link href="../../css/prism.css" rel="stylesheet">
@@ -52,6 +52,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Components <span class="caret"></span></a>
 					<ul class="dropdown-menu">
+						<li><a href="../../components/editing.html">Editing</a></li>
 						<li><a href="../../components/filtering.html">Filtering</a></li>
 						<li><a href="../../components/paging.html">Paging</a></li>
 						<li><a href="../../components/sorting.html">Sorting</a></li>
@@ -59,7 +60,7 @@
 				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="../../jsdocs/index.html" target="_blank">JsDocs</a></li>
+				<li><a href="../../jsdocs/index.html" target="_blank">JSDocs</a></li>
 				<li><a href="https://github.com/fooplugins/FooTable" target="_blank">GitHub</a></li>
 			</ul>
 		</div><!--/.nav-collapse -->
@@ -114,7 +115,7 @@
 
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="../../js/prism.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../../js/ie10-viewport-bug-workaround.js"></script>
@@ -125,10 +126,6 @@
 <!-- Initialize FooTable -->
 <script>
 	jQuery(function($){
-		$('.nav-tabs a').click(function (e) {
-			e.preventDefault();
-			$(this).tab('show');
-		});
 		$('#paging-example-1').footable({
 			"columns": $.get("../../content/columns.json"),
 			"rows": $.get("../../content/rows.json")

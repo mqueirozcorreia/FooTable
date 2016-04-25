@@ -12,8 +12,8 @@
 	<title>Getting started - FooTable</title>
 
 	<!-- Bootstrap core CSS -->
-	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" rel="stylesheet">
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" rel="stylesheet">
 
 	<!-- Prism -->
 	<link href="css/prism.css" rel="stylesheet">
@@ -50,6 +50,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Components <span class="caret"></span></a>
 					<ul class="dropdown-menu">
+						<li><a href="components/editing.html">Editing</a></li>
 						<li><a href="components/filtering.html">Filtering</a></li>
 						<li><a href="components/paging.html">Paging</a></li>
 						<li><a href="components/sorting.html">Sorting</a></li>
@@ -57,7 +58,7 @@
 				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="jsdocs/index.html" target="_blank">JsDocs</a></li>
+				<li><a href="jsdocs/index.html" target="_blank">JSDocs</a></li>
 				<li><a href="https://github.com/fooplugins/FooTable" target="_blank">GitHub</a></li>
 			</ul>
 		</div><!--/.nav-collapse -->
@@ -164,6 +165,11 @@
     ├── footable.js
     └── footable.min.js</code></pre>
 				<p>This is the second easiest way to use FooTable; precompiled files for quick drop-in usage. We provide compiled CSS and JS (<code>footable.*</code>), as well as compiled and minified CSS and JS (<code>footable.*.min.*</code>). This version does not have theme support and will require custom CSS to override any styling.</p>
+
+				<div class="callout callout-warning" id="fontawesome-required">
+					<h4>FontAwesome required</h4>
+					<p>Please note that when using this version <strong>FooTable requires FontAwesome</strong> to be included for icons. If you need a truly stand alone version with no dependencies then you should take a look at the <code>FooTable.FontAwesome.css</code> and <code>FooTable.Glyphicons.css</code> files in the <a href="https://github.com/fooplugins/FooTable" target="_blank">GitHub</a> repo and create your own custom icons.</p>
+				</div>
 			</div>
 
 			<!-- Individual Components -->
@@ -830,7 +836,7 @@
 					<div class="examples">
 						<div class="example default">
 							<p><code>[]</code></p>
-							<p>This is a required option, row data must be supplied otherwise the table will be ignored by the plugin.</p>
+							<p>If no rows are supplied the value of the <a href="#empty">empty</a> option will be displayed.</p>
 						</div>
 					</div>
 
@@ -1154,6 +1160,46 @@
 						<pre class="language-javascript" data-lang="javascript"><code>jQuery(function($){
 	$(&#39;.table&#39;).footable({
 		&quot;toggleColumn&quot;: &quot;last&quot;
+	});
+});</code></pre>
+
+					</div>
+
+				</div>
+
+			</div>
+
+			<!-- toggleSelector -->
+			<a href="#toggleSelector" class="list-group-item anchored">
+				<span id="toggleSelector" class="anchor">&nbsp;</span>
+				<h4 class="list-group-item-heading">toggleSelector <small>string</small></h4>
+				<p class="list-group-item-text">A string specifying the CSS selector used to filter row click events.</p>
+			</a>
+			<div class="list-group-detail">
+				<div class="list-group-detail-inner">
+					<div class="examples">
+						<div class="example default">
+							<p><code>"tr,td,.footable-toggle"</code></p>
+							<p>If the <code>event.target</code> property matches the selector the row will be toggled. With the default selector any clicks directly on the row, a cell in the row or the FooTable toggle element will trigger the toggling of the row.</p>
+						</div>
+					</div>
+
+					<div class="examples">
+						<div class="example static">
+							<p>To supply this option through data attributes you must specify the attribute on the <code>table</code> element.</p>
+						</div>
+						<pre class="language-markup" data-lang="markup"><code>&lt;table data-toggle-selector=&quot;.footable-toggle&quot;&gt;
+	...
+&lt;/table&gt;</code></pre>
+					</div>
+
+					<div class="examples">
+						<div class="example javascript">
+							<p>The below shows how to supply the value directly through the options.</p>
+						</div>
+						<pre class="language-javascript" data-lang="javascript"><code>jQuery(function($){
+	$(&#39;.table&#39;).footable({
+		&quot;toggleSelector&quot;: &quot;.footable-toggle&quot;
 	});
 });</code></pre>
 
@@ -1614,7 +1660,7 @@
 									<h4 class="list-group-item-heading">text</h4>
 									<p class="list-group-item-text">The default column type, used for all columns unless another type is specified overriding it.</p>
 								</a>
-								<a class="list-group-item">
+								<a href="columns/number.html" class="list-group-item">
 									<h4 class="list-group-item-heading">number</h4>
 									<p class="list-group-item-text">Used for columns that contain numeric data.</p>
 								</a>
@@ -2079,6 +2125,12 @@
 				<p class="list-group-item-text">Shows how to create a table that makes use of the filtering component.</p>
 			</a>
 
+			<a href="examples/component/editing.html" class="list-group-item anchored">
+				<span id="component-editing" class="anchor">&nbsp;</span>
+				<h4 class="list-group-item-heading">Editing rows</h4>
+				<p class="list-group-item-text">Shows how to create a table that makes use of the editing component.</p>
+			</a>
+
 			<a href="examples/component/showcase.html" class="list-group-item anchored">
 				<span id="component-showcase" class="anchor">&nbsp;</span>
 				<h4 class="list-group-item-heading">Showcase</h4>
@@ -2096,13 +2148,55 @@
 				<p class="list-group-item-text">Shows how to create a table providing the columns and/or rows through ajax.</p>
 			</a>
 
+			<a href="examples/advanced/custom-filter-ui.html" class="list-group-item anchored">
+				<span id="custom-filter-ui" class="anchor">&nbsp;</span>
+				<h4 class="list-group-item-heading">Custom filter UI</h4>
+				<p class="list-group-item-text">Shows how to create a completely custom filter UI.</p>
+			</a>
+
+			<a href="examples/advanced/filter-dropdown.html" class="list-group-item anchored">
+				<span id="filter-dropdown" class="anchor">&nbsp;</span>
+				<h4 class="list-group-item-heading">Custom dropdown filter</h4>
+				<p class="list-group-item-text">Shows how to create a custom dropdown filter.</p>
+			</a>
+
+			<a href="examples/advanced/change-pagesize.html" class="list-group-item anchored">
+				<span id="change-pagesize" class="anchor">&nbsp;</span>
+				<h4 class="list-group-item-heading">Change page size</h4>
+				<p class="list-group-item-text">Shows how to dynamically change the page size.</p>
+			</a>
+
 		</div>
+
+		<div class="list-group">
+			<h3 class="list-group-header anchored"><span id="bootstrap" class="anchor">&nbsp;</span>Bootstrap Examples</h3>
+
+			<a href="examples/bootstrap/accordion.html" class="list-group-item anchored">
+				<span id="bootstrap-accordion" class="anchor">&nbsp;</span>
+				<h4 class="list-group-item-heading">Accordion component</h4>
+				<p class="list-group-item-text">Shows using FooTable with Bootstraps' accordion component.</p>
+			</a>
+
+			<a href="examples/bootstrap/collapse.html" class="list-group-item anchored">
+				<span id="bootstrap-collapse" class="anchor">&nbsp;</span>
+				<h4 class="list-group-item-heading">Collapse component</h4>
+				<p class="list-group-item-text">Shows using FooTable with Bootstraps' collapse component.</p>
+			</a>
+
+			<a href="examples/bootstrap/modal.html" class="list-group-item anchored">
+				<span id="bootstrap-modal" class="anchor">&nbsp;</span>
+				<h4 class="list-group-item-heading">Modal component</h4>
+				<p class="list-group-item-text">Shows using FooTable with Bootstraps' modal component.</p>
+			</a>
+
+		</div>
+
 	</div>
 </div> <!-- /container -->
 
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="js/prism.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="js/ie10-viewport-bug-workaround.js"></script>
@@ -2114,10 +2208,6 @@
 <!-- Initialize FooTable -->
 <script>
 	jQuery(function($){
-		$('.nav-tabs a').click(function (e) {
-			e.preventDefault();
-			$(this).tab('show');
-		});
 	});
 </script>
 </body>

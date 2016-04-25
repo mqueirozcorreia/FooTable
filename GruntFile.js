@@ -13,6 +13,16 @@ module.exports = function (grunt) {
 			jsdoc: ['docs/jsdocs']
 		},
 		concat: {
+			options: {
+				stripBanners: true,
+				banner: '/*\n' +
+				'* <%= pkg.title %> - <%= pkg.description %>\n' +
+				'* @version <%= pkg.version %>\n' +
+				'* @link <%= pkg.homepage %>\n' +
+				'* @copyright Steven Usher & Brad Vincent 2015\n' +
+				'* @license Released under the GPLv3 license.\n' +
+				'*/\n'
+			},
 			core_js: {
 				src: [
 					"src/js/FooTable.js",
@@ -76,12 +86,25 @@ module.exports = function (grunt) {
 				],
 				dest: "compiled/footable.paging.css"
 			},
+			editing_js: {
+				src: [
+					"src/js/components/core/editing/**/*.js"
+				],
+				dest: "compiled/footable.editing.js"
+			},
+			editing_css: {
+				src: [
+					"src/css/components/FooTable.Editing.css"
+				],
+				dest: "compiled/footable.editing.css"
+			},
 			all_js: {
 				src: [
 					"compiled/footable.core.js",
 					"compiled/footable.filtering.js",
 					"compiled/footable.sorting.js",
-					"compiled/footable.paging.js"
+					"compiled/footable.paging.js",
+					"compiled/footable.editing.js"
 				],
 				dest: "compiled/footable.js"
 			},
@@ -90,7 +113,8 @@ module.exports = function (grunt) {
 					"compiled/footable.core.standalone.css",
 					"compiled/footable.filtering.css",
 					"compiled/footable.sorting.css",
-					"compiled/footable.paging.css"
+					"compiled/footable.paging.css",
+					"compiled/footable.editing.css"
 				],
 				dest: "compiled/footable.standalone.css"
 			},
@@ -99,7 +123,8 @@ module.exports = function (grunt) {
 					"compiled/footable.core.bootstrap.css",
 					"compiled/footable.filtering.css",
 					"compiled/footable.sorting.css",
-					"compiled/footable.paging.css"
+					"compiled/footable.paging.css",
+					"compiled/footable.editing.css"
 				],
 				dest: "compiled/footable.bootstrap.css"
 			}
@@ -107,28 +132,37 @@ module.exports = function (grunt) {
 		uglify: {
 			prod: {
 				options: {
-					preserveComments: 'some',
-					mangle: {
-						except: [ "undefined" ]
-					}
+					preserveComments: false,
+					banner: '/*\n' +
+					'* <%= pkg.title %> - <%= pkg.description %>\n' +
+					'* @version <%= pkg.version %>\n' +
+					'* @link <%= pkg.homepage %>\n' +
+					'* @copyright Steven Usher & Brad Vincent 2015\n' +
+					'* @license Released under the GPLv3 license.\n' +
+					'*/\n'
 				},
 				files: {
 					'compiled/footable.min.js': [ "compiled/footable.js" ],
 					'compiled/footable.core.min.js': [ "compiled/footable.core.js" ],
 					'compiled/footable.filtering.min.js': [ "compiled/footable.filtering.js" ],
 					'compiled/footable.sorting.min.js': [ "compiled/footable.sorting.js" ],
-					'compiled/footable.paging.min.js': [ "compiled/footable.paging.js" ]
+					'compiled/footable.paging.min.js': [ "compiled/footable.paging.js" ],
+					'compiled/footable.editing.min.js': [ "compiled/footable.editing.js" ]
 				}
 			}
 		},
 		cssmin: {
 			minify: {
+				options: {
+					keepSpecialComments: 1
+				},
 				files: {
 					'compiled/footable.standalone.min.css': [ "compiled/footable.standalone.css" ],
 					'compiled/footable.bootstrap.min.css': [ "compiled/footable.bootstrap.css" ],
 					'compiled/footable.filtering.min.css': [ "compiled/footable.filtering.css" ],
 					'compiled/footable.sorting.min.css': [ "compiled/footable.sorting.css" ],
-					'compiled/footable.paging.min.css': [ "compiled/footable.paging.css" ]
+					'compiled/footable.paging.min.css': [ "compiled/footable.paging.css" ],
+					'compiled/footable.editing.min.css': [ "compiled/footable.editing.css" ]
 				}
 			}
 		},
@@ -194,7 +228,9 @@ module.exports = function (grunt) {
 						'footable.paging.css',
 						'footable.paging.min.css',
 						'footable.sorting.css',
-						'footable.sorting.min.css'
+						'footable.sorting.min.css',
+						'footable.editing.css',
+						'footable.editing.min.css'
 					],
 					dest: 'css/'
 				},{
@@ -208,7 +244,9 @@ module.exports = function (grunt) {
 						'footable.paging.js',
 						'footable.paging.min.js',
 						'footable.sorting.js',
-						'footable.sorting.min.js'
+						'footable.sorting.min.js',
+						'footable.editing.js',
+						'footable.editing.min.js'
 					],
 					dest: 'js/'
 				}]
@@ -245,7 +283,6 @@ module.exports = function (grunt) {
 		},
 		jsdoc: {
 			dist: {
-				src: ['src/js/**/*.js'],
 				options: {
 					destination: 'docs/jsdocs',
 					configure: 'jsdoc.json'

@@ -43,6 +43,12 @@
 			 */
 			this.showToggle = table.o.showToggle;
 			/**
+			 * The CSS selector used to filter row click events. If the event.target property matches the selector the row will be toggled.
+			 * @type {string}
+			 * @default "tr,td,.footable-toggle"
+			 */
+			this.toggleSelector = table.o.toggleSelector;
+			/**
 			 * Specifies which column the row toggle is appended to. Supports only two values; "first" and "last"
 			 * @type {string}
 			 */
@@ -73,16 +79,6 @@
 			var self = this;
 			return $.Deferred(function(d){
 				var $rows = self.ft.$el.children('tbody').children('tr');
-				function complete(rows){
-					var result = $.map(rows, function(r){
-						return new F.Row(self.ft, self.ft.columns.array, r);
-					});
-					if (F.is.emptyArray(result)){
-						d.reject(Error("No rows supplied."));
-					} else {
-						d.resolve(result);
-					}
-				}
 				if (F.is.jq($rows)){
 					self.parseFinalize(d, $rows);
 					$rows.detach();
@@ -111,11 +107,7 @@
 			var self = this, result = $.map(rows, function(r){
 				return new F.Row(self.ft, self.ft.columns.array, r);
 			});
-			if (F.is.emptyArray(result)){
-				deferred.reject(Error("No rows supplied."));
-			} else {
-				deferred.resolve(result);
-			}
+			deferred.resolve(result);
 		},
 		/**
 		 * The columns preinit method is used to parse and check the column options supplied from both static content and through the constructor.
@@ -139,6 +131,7 @@
 					self.all = rows;
 					self.array = self.all.slice(0);
 					self.showToggle = F.is.boolean(data.showToggle) ? data.showToggle : self.showToggle;
+					self.toggleSelector = F.is.string(data.toggleSelector) ? data.toggleSelector : self.toggleSelector;
 					self.toggleColumn = F.is.string(data.toggleColumn) ? data.toggleColumn : self.toggleColumn;
 					if (self.toggleColumn != "first" && self.toggleColumn != "last") self.toggleColumn = "first";
 					self.emptyString = F.is.string(data.empty) ? data.empty : self.emptyString;
