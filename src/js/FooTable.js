@@ -13,8 +13,6 @@
 		options = options || {};
 		// make sure we only work with tables
 		return this.filter('table').each(function (i, tbl) {
-			var ft = F.get(tbl);
-			if (ft instanceof F.Table) ft.destroy();
 			F.init(tbl, options, ready);
 		});
 	};
@@ -64,7 +62,25 @@
 	 * @returns {FooTable.Table}
 	 */
 	F.init = function(table, options, ready){
+		var ft = F.get(table);
+		if (ft instanceof F.Table) ft.destroy();
 		return new F.Table(table, options, ready);
+	};
+
+	/**
+	 * Gets the FooTable.Row instance for the supplied element.
+	 * @param {(jQuery|jQuery.selector|HTMLTableElement)} element - A jQuery object, selector or the HTMLElement of an element to retrieve the FooTable.Row for.
+	 * @returns {FooTable.Row}
+	 */
+	F.getRow = function(element){
+		// to get the FooTable.Row object simply walk up the DOM, find the TR and grab the __FooTableRow__ data value
+		var $row = $(element).closest('tr');
+		// if this is a detail row get the previous row in the table to get the main TR element
+		if ($row.hasClass('footable-detail-row')){
+			$row = $row.prev();
+		}
+		// grab the row object
+		return $row.data('__FooTableRow__');
 	};
 
 	// The below are external type definitions mainly used as pointers to jQuery docs for important information
