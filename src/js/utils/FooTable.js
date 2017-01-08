@@ -9,7 +9,9 @@
 		if (F.is.emptyString(cssText)) return {};
 		var json = {}, props = cssText.split(';'), pair, key, value;
 		for (var i = 0, i_len = props.length; i < i_len; i++){
+			if (F.is.emptyString(props[i])) continue;
 			pair = props[i].split(':');
+			if (F.is.emptyString(pair[0]) || F.is.emptyString(pair[1])) continue;
 			key = F.str.toCamelCase($.trim(pair[0]));
 			value = $.trim(pair[1]);
 			json[key] = value;
@@ -19,14 +21,17 @@
 
 	/**
 	 * Attempts to retrieve a function pointer using the given name.
-	 * @protected
 	 * @param {string} functionName - The name of the function to fetch a pointer to.
 	 * @returns {(function|object|null)}
 	 */
 	F.getFnPointer = function(functionName){
 		if (F.is.emptyString(functionName)) return null;
-		if (F.is.fn(window[functionName])) return window[functionName];
-		return null;
+		var pointer = window,
+			parts = functionName.split('.');
+		F.arr.each(parts, function(part){
+			if (pointer[part]) pointer = pointer[part];
+		});
+		return F.is.fn(pointer) ? pointer : null;
 	};
 
 	/**

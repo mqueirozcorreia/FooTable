@@ -151,9 +151,10 @@
 		 * Using this method also allows us to supply an object containing options and the data for the row at the same time.
 		 * @instance
 		 * @param {object} [data] - The data to set for the row. If not supplied the current value of the row is returned.
+		 * @param {boolean} [redraw=true] - Whether or not to redraw the row once the value has been set.
 		 * @returns {(*|undefined)}
 		 */
-		val: function(data){
+		val: function(data, redraw){
 			var self = this;
 			if (!F.is.hash(data)){
 				// get - check the value property and build it from the cells if required.
@@ -179,7 +180,19 @@
 			this.expanded = this.o.expanded;
 			this.classes = F.is.array(this.o.classes) ? this.o.classes : (F.is.string(this.o.classes) ? this.o.classes.match(/\S+/g) : []);
 			this.style = F.is.hash(this.o.style) ? this.o.style : (F.is.string(this.o.style) ? F.css2json(this.o.style) : {});
-			this.value = isObj ? (hasOptions ? data.value : data) : null;
+			if (isObj) {
+				if ( hasOptions ) data = data.value;
+				if (F.is.hash(this.value)){
+					for (var prop in data) {
+						if (!data.hasOwnProperty(prop)) continue;
+						this.value[prop] = data[prop];
+					}
+				} else {
+					this.value = data;
+				}
+			} else {
+				this.value = null;
+			}
 
 			F.arr.each(this.cells, function(cell){
 				if (F.is.defined(self.value[cell.column.name])) cell.val(self.value[cell.column.name], false);
@@ -188,7 +201,7 @@
 			if (this.created){
 				this._setClasses(this.$el);
 				this._setStyle(this.$el);
-				this.draw();
+				if (F.is.boolean(redraw) ? redraw : true) this.draw();
 			}
 		},
 		_setClasses: function($el){
@@ -227,7 +240,7 @@
 			 * @param {FooTable.Table} ft - The instance of the plugin raising the event.
 			 * @param {FooTable.Row} row - The row about to be expanded.
 			 */
-			self.ft.raise('expand.ft.row').then(function(){
+			self.ft.raise('expand.ft.row',[self]).then(function(){
 				self.__hidden__ = F.arr.map(self.cells, function(cell){
 					return cell.column.hidden && cell.column.visible ? cell : null;
 				});
@@ -249,20 +262,21 @@
 		/**
 		 * Sets the current row to a collapsed state removing the detail row if it exists.
 		 * @instance
-		 * @this FooTable.Row
+		 * @param {boolean} [setExpanded] - Whether or not to set the {@link FooTable.Row#expanded} property to false.
+		 * @fires FooTable.Row#"collapse.ft.row"
 		 */
 		collapse: function(setExpanded){
 			if (!this.created) return;
 			var self = this;
 			/**
-			 * The expand.ft.row event is raised before the the row is expanded.
-			 * Calling preventDefault on this event will stop the row being expanded.
-			 * @event FooTable.Row#"expand.ft.row"
+			 * The collapse.ft.row event is raised before the the row is collapsed.
+			 * Calling preventDefault on this event will stop the row being collapsed.
+			 * @event FooTable.Row#"collapse.ft.row"
 			 * @param {jQuery.Event} e - The jQuery.Event object for the event.
 			 * @param {FooTable.Table} ft - The instance of the plugin raising the event.
 			 * @param {FooTable.Row} row - The row about to be expanded.
 			 */
-			self.ft.raise('collapse.ft.row').then(function(){
+			self.ft.raise('collapse.ft.row',[self]).then(function(){
 				F.arr.each(self.__hidden__, function(cell){
 					cell.restore();
 				});
@@ -275,15 +289,17 @@
 		/**
 		 * Prior to drawing this moves the details contents back to there original cells and detaches the toggle element from the row.
 		 * @instance
+		 * @param {boolean} [detach] - Whether or not to detach the row.
 		 * @this FooTable.Row
 		 */
-		predraw: function(){
+		predraw: function(detach){
 			if (this.created){
 				if (this.expanded){
 					this.collapse(false);
 				}
 				this.$toggle.detach();
-				this.$el.detach();
+				detach = F.is.boolean(detach) ? detach : true;
+				if (detach) this.$el.detach();
 			}
 		},
 		/**
@@ -302,6 +318,13 @@
 						|| (self.ft.rows.toggleColumn == 'last' && cell.column.index == self.ft.columns.lastVisibleIndex)) {
 						cell.$el.prepend(self.$toggle);
 					}
+				}
+				cell.$el.add(cell.column.$el).removeClass('footable-first-visible footable-last-visible');
+				if (cell.column.index == self.ft.columns.firstVisibleIndex){
+					cell.$el.add(cell.column.$el).addClass('footable-first-visible');
+				}
+				if (cell.column.index == self.ft.columns.lastVisibleIndex){
+					cell.$el.add(cell.column.$el).addClass('footable-last-visible');
 				}
 			});
 			if (this.expanded){
